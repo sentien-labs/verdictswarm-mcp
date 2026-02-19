@@ -1,0 +1,69 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "verdictswarm-mcp"
+version = "0.1.0"
+description = "MCP server for AI-powered crypto token risk analysis — 6-agent consensus scoring, rug-pull detection, and security audits via the VerdictSwarm API."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [
+  { name = "Sentien Labs", email = "dev@sentienlabs.com" },
+]
+keywords = [
+  "mcp",
+  "crypto",
+  "token-scanner",
+  "rug-pull",
+  "risk-analysis",
+  "solana",
+  "ethereum",
+  "defi",
+  "ai-agents",
+  "verdictswarm",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Security",
+  "Topic :: Office/Business :: Financial",
+  "Typing :: Typed",
+]
+dependencies = [
+  "mcp[cli]>=1.25.0,<2",
+  "httpx>=0.27",
+  "pydantic>=2.0",
+]
+
+[project.urls]
+Homepage = "https://verdictswarm.ai"
+Documentation = "https://github.com/vswarm-ai/verdictswarm/tree/main/mcp-server"
+Repository = "https://github.com/vswarm-ai/verdictswarm"
+Issues = "https://github.com/vswarm-ai/verdictswarm/issues"
+Changelog = "https://github.com/vswarm-ai/verdictswarm/blob/main/mcp-server/CHANGELOG.md"
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "pytest-asyncio>=0.23",
+]
+
+[project.scripts]
+verdictswarm-mcp = "verdictswarm_mcp:main"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

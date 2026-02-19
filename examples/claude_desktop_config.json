@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "verdictswarm": {
+      "command": "uvx",
+      "args": ["verdictswarm-mcp"],
+      "env": {
+        "VS_API_KEY": "vs_live_xxx",
+        "VS_API_URL": "https://verdictswarm-production.up.railway.app",
+        "VS_TIMEOUT": "120"
+      }
+    }
+  }
+}
