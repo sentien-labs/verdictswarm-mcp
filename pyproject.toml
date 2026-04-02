@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "verdictswarm-mcp"
-version = "0.1.5"
+version = "0.1.6"
 description = "Fight AI with AI. The security layer for AI agents that touch money — 6 adversarial AI agents debate crypto token risk before your agent trades. Rug-pull detection, security audits, consensus scoring."
 readme = "README.md"
 license = "MIT"
