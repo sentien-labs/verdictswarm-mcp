@@ -1,0 +1,36 @@
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties:
+      VERDICTSWARM_API_KEY:
+        type: string
+        title: API Key
+        description: "Optional API key for authenticated access. Alternative to per-call USDC payments."
+      VERDICTSWARM_API_URL:
+        type: string
+        title: API URL
+        description: "VerdictSwarm API base URL. Defaults to https://api.vswarm.io"
+        default: "https://api.vswarm.io"
+      HOST:
+        type: string
+        title: Host
+        description: "Server bind address"
+        default: "0.0.0.0"
+      PORT:
+        type: integer
+        title: Port
+        description: "Server port number"
+        default: 8000
+    required: []
+  commandFunction: |
+    (config) => ({
+      command: "uvx",
+      args: ["verdictswarm-mcp"],
+      env: {
+        ...(config.VERDICTSWARM_API_KEY ? { VERDICTSWARM_API_KEY: config.VERDICTSWARM_API_KEY } : {}),
+        ...(config.VERDICTSWARM_API_URL ? { VERDICTSWARM_API_URL: config.VERDICTSWARM_API_URL } : {}),
+        ...(config.HOST ? { HOST: config.HOST } : {}),
+        ...(config.PORT ? { PORT: String(config.PORT) } : {}),
+      },
+    })

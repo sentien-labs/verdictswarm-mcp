@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 import os
+from typing import Annotated
 
 from mcp.server.fastmcp import FastMCP
+from mcp.types import ToolAnnotations
+from pydantic import Field
 
 from .api_client import VerdictSwarmApiClient
 from .config import TOOL_PRICING, USDC_MINT, VS_PAYMENT_WALLET
@@ -17,13 +20,21 @@ mcp = FastMCP(
 api_client = VerdictSwarmApiClient()
 
 
-@mcp.tool()
+@mcp.tool(
+    annotations=ToolAnnotations(
+        title="Full Token Scan",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    ),
+)
 async def scan_token(
-    token_address: str,
-    chain: str = "solana",
-    depth: str = "full",
-    api_key: str = "",
-    tx_signature: str = "",
+    token_address: Annotated[str, Field(description="Contract address of the token to scan")],
+    chain: Annotated[str, Field(description="Blockchain network: solana, ethereum, base, etc.")] = "solana",
+    depth: Annotated[str, Field(description="Scan depth: 'full' for all 6 agents, 'quick' for fast check")] = "full",
+    api_key: Annotated[str, Field(description="API key for authentication (alternative to tx_signature)")] = "",
+    tx_signature: Annotated[str, Field(description="Solana USDC payment transaction signature for pay-per-call auth")] = "",
 ) -> dict:
     """
     Run a full 6-agent VerdictSwarm risk scan.
@@ -38,13 +49,21 @@ async def scan_token(
     )
 
 
-@mcp.tool()
+@mcp.tool(
+    annotations=ToolAnnotations(
+        title="Quick Score",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    ),
+)
 async def get_quick_score(
-    token_address: str,
-    chain: str = "solana",
-    api_key: str = "",
-    tx_signature: str = "",
-    client_id: str = "anonymous",
+    token_address: Annotated[str, Field(description="Contract address of the token to check")],
+    chain: Annotated[str, Field(description="Blockchain network: solana, ethereum, base, etc.")] = "solana",
+    api_key: Annotated[str, Field(description="API key for authentication (alternative to tx_signature)")] = "",
+    tx_signature: Annotated[str, Field(description="Solana USDC payment transaction signature for pay-per-call auth")] = "",
+    client_id: Annotated[str, Field(description="Client identifier for free-tier rate limiting")] = "anonymous",
 ) -> dict:
     """
     Fast cached token risk check.
@@ -62,12 +81,20 @@ async def get_quick_score(
     return format_quick_score(result)
 
 
-@mcp.tool()
+@mcp.tool(
+    annotations=ToolAnnotations(
+        title="Rug Risk Check",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    ),
+)
 async def check_rug_risk(
-    token_address: str,
-    chain: str = "solana",
-    api_key: str = "",
-    tx_signature: str = "",
+    token_address: Annotated[str, Field(description="Contract address of the token to check for rug-pull risk")],
+    chain: Annotated[str, Field(description="Blockchain network: solana, ethereum, base, etc.")] = "solana",
+    api_key: Annotated[str, Field(description="API key for authentication (alternative to tx_signature)")] = "",
+    tx_signature: Annotated[str, Field(description="Solana USDC payment transaction signature for pay-per-call auth")] = "",
 ) -> dict:
     """
     Rug-pull-focused security scan.
@@ -99,12 +126,20 @@ async def get_trending_risky(chain: str = "solana", min_risk_level: str = "HIGH"
     }
 
 
-@mcp.tool()
+@mcp.tool(
+    annotations=ToolAnnotations(
+        title="Token Report",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    ),
+)
 async def get_token_report(
-    token_address: str,
-    chain: str = "solana",
-    api_key: str = "",
-    tx_signature: str = "",
+    token_address: Annotated[str, Field(description="Contract address of the token to generate a report for")],
+    chain: Annotated[str, Field(description="Blockchain network: solana, ethereum, base, etc.")] = "solana",
+    api_key: Annotated[str, Field(description="API key for authentication (alternative to tx_signature)")] = "",
+    tx_signature: Annotated[str, Field(description="Solana USDC payment transaction signature for pay-per-call auth")] = "",
 ) -> str:
     """
     Generate a shareable markdown report for a token.
@@ -121,7 +156,15 @@ async def get_token_report(
     return format_report_markdown(result)
 
 
-@mcp.tool()
+@mcp.tool(
+    annotations=ToolAnnotations(
+        title="Pricing Info",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=False,
+    ),
+)
 async def get_pricing() -> dict:
     """
     Return current tool pricing and Solana payment details.
@@ -146,8 +189,19 @@ async def get_pricing() -> dict:
     }
 
 
-@mcp.tool()
-async def verify_payment(tx_signature: str, tool_name: str) -> dict:
+@mcp.tool(
+    annotations=ToolAnnotations(
+        title="Verify Payment",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=True,
+    ),
+)
+async def verify_payment(
+    tx_signature: Annotated[str, Field(description="Solana transaction signature to verify")],
+    tool_name: Annotated[str, Field(description="Name of the tool the payment is for (e.g. scan_token, get_quick_score)")],
+) -> dict:
     """
     Verify a Solana USDC payment for a tool call.
     Returns verification status, sender, and required vs received amount.
