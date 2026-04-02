@@ -3,12 +3,14 @@ FROM python:3.12-slim
 WORKDIR /app
 
 # Install the package from PyPI
-RUN pip install --no-cache-dir verdictswarm-mcp==0.1.0
+RUN pip install --no-cache-dir verdictswarm-mcp>=0.1.5
 
-# MCP server runs via stdio (standard MCP transport)
-# Environment variables required at runtime:
-# VERDICTSWARM_API_URL - API base URL (default: https://verdictswarm-production.up.railway.app)
-ENV VERDICTSWARM_API_URL=https://verdictswarm-production.up.railway.app
+# Run as streamable-http for remote hosting (Smithery, Glama, etc.)
+ENV VS_TRANSPORT=streamable-http
+ENV VS_HOST=0.0.0.0
+ENV VS_PORT=8000
+ENV VS_API_URL=https://api.vswarm.io
+
+EXPOSE 8000
 
 ENTRYPOINT ["verdictswarm-mcp"]
-
