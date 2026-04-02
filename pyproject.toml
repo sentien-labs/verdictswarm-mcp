@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "verdictswarm-mcp"
-version = "0.1.0"
+version = "0.1.5"
 description = "MCP server for AI-powered crypto token risk analysis — 6-agent consensus scoring, rug-pull detection, and security audits via the VerdictSwarm API."
 readme = "README.md"
 license = "MIT"
@@ -43,7 +43,7 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://verdictswarm.ai"
+Homepage = "https://vswarm.io"
 Documentation = "https://github.com/vswarm-ai/verdictswarm/tree/main/mcp-server"
 Repository = "https://github.com/vswarm-ai/verdictswarm"
 Issues = "https://github.com/vswarm-ai/verdictswarm/issues"

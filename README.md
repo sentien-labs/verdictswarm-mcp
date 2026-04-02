@@ -27,7 +27,11 @@ One tool call. Sub-second cached responses. No blockchain node required.
 ### Install & Run
 
 ```bash
-# Install from GitHub
+# Install from PyPI (recommended)
+pip install verdictswarm-mcp
+VS_API_KEY=your_key verdictswarm-mcp
+
+# Or install from GitHub
 pip install git+https://github.com/vswarm-ai/verdictswarm.git#subdirectory=mcp-server
 VS_API_KEY=your_key verdictswarm-mcp
 
@@ -73,7 +77,7 @@ mcpServers:
 
 ### No API Key?
 
-The server works without a key at free-tier limits (10 scans/day, basic scores only). Get a key at [verdictswarm.ai](https://verdictswarm.ai) for full access.
+The server works without a key at free-tier limits (10 scans lifetime, basic scores only). Get a key at [vswarm.io](https://vswarm.io) for full access.
 
 ## Tools
 
@@ -139,7 +143,7 @@ Agent: [calls check_rug_risk("7xKXtg...")]
 | Environment Variable | Default | Description |
 |---------------------|---------|-------------|
 | `VS_API_KEY` | *(empty — free tier)* | Your VerdictSwarm API key |
-| `VS_API_URL` | `https://verdictswarm-production.up.railway.app` | API base URL |
+| `VS_API_URL` | `https://api.vswarm.io` | API base URL |
 | `VS_TIMEOUT` | `120` | Request timeout in seconds |
 
 ## Architecture
@@ -156,7 +160,7 @@ MCP Client (Claude, Cursor, OpenClaw, Codex...)
            │  HTTP (httpx)
            ▼
 ┌──────────────────────────┐
-│  VerdictSwarm API        │  ← Existing backend (Railway)
+│  VerdictSwarm API        │  ← api.vswarm.io
 │  6 AI agents + on-chain  │
 └──────────────────────────┘
 ```
@@ -181,8 +185,8 @@ MIT — see [LICENSE](LICENSE).
 
 ## Links
 
-- **Website:** [verdictswarm.ai](https://verdictswarm.ai)
-- **API Docs:** [docs.verdictswarm.ai](https://docs.verdictswarm.ai)
+- **Website:** [vswarm.io](https://vswarm.io)
+- **API Docs:** [api.vswarm.io/docs](https://api.vswarm.io/docs)
 - **GitHub:** [vswarm-ai/verdictswarm](https://github.com/vswarm-ai/verdictswarm)
 - **MCP Spec:** [modelcontextprotocol.io](https://modelcontextprotocol.io)
 

@@ -12,18 +12,19 @@ from verdictswarm_mcp.server import (
 )
 
 
-@pytest.fixture(autouse=True)
-def bypass_auth():
-    """Bypass auth for all server tests — auth is tested separately in test_payments.py."""
-    with patch("verdictswarm_mcp.server.authenticate", AsyncMock(return_value=None)):
-        yield
-
-
 @pytest.mark.asyncio
 async def test_scan_token_returns_api_result(mock_scan_result):
-    with patch("verdictswarm_mcp.server.api_client.scan", AsyncMock(return_value=mock_scan_result)):
+    scan_mock = AsyncMock(return_value=mock_scan_result)
+    with patch("verdictswarm_mcp.server.api_client.scan", scan_mock):
         result = await scan_token("So111", chain="solana", depth="full")
     assert result == mock_scan_result
+    scan_mock.assert_awaited_once_with(
+        address="So111",
+        chain="solana",
+        depth="full",
+        tier="PRO_PLUS",
+        payment_signature="",
+    )
 
 
 @pytest.mark.asyncio
@@ -43,8 +44,21 @@ async def test_get_quick_score_propagates_error():
 
 
 @pytest.mark.asyncio
+async def test_get_quick_score_propagates_payment_required():
+    payment_error = {
+        "error": "Payment required.",
+        "payment_required": True,
+        "status_code": 402,
+        "payment_instructions": {"price_usd": "0.10"},
+    }
+    with patch("verdictswarm_mcp.server.api_client.quick_scan", AsyncMock(return_value=payment_error)):
+        result = await get_quick_score("So111")
+    assert result == payment_error
+
+
+@pytest.mark.asyncio
 async def test_check_rug_risk_returns_assessment(mock_dangerous_result):
-    with patch("verdictswarm_mcp.server.api_client.quick_scan", AsyncMock(return_value=mock_dangerous_result)):
+    with patch("verdictswarm_mcp.server.api_client.rug_risk_scan", AsyncMock(return_value=mock_dangerous_result)):
         result = await check_rug_risk("Bad111")
     assert result["risk_verdict"] == "DANGER"
     assert isinstance(result["risk_factors"], list)
@@ -52,7 +66,7 @@ async def test_check_rug_risk_returns_assessment(mock_dangerous_result):
 
 @pytest.mark.asyncio
 async def test_check_rug_risk_propagates_error():
-    with patch("verdictswarm_mcp.server.api_client.quick_scan", AsyncMock(return_value={"error": "timeout"})):
+    with patch("verdictswarm_mcp.server.api_client.rug_risk_scan", AsyncMock(return_value={"error": "timeout"})):
         result = await check_rug_risk("Bad111")
     assert result == {"error": "timeout"}
 

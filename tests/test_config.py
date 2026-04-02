@@ -10,7 +10,7 @@ def test_config_defaults(monkeypatch):
 
     cfg = importlib.reload(config)
 
-    assert cfg.VS_API_URL == "https://verdictswarm-production.up.railway.app"
+    assert cfg.VS_API_URL == "https://api.vswarm.io"
     assert cfg.VS_API_KEY == ""
     assert cfg.VS_TIMEOUT == 120
 

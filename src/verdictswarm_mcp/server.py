@@ -3,10 +3,9 @@ from __future__ import annotations
 from mcp.server.fastmcp import FastMCP
 
 from .api_client import VerdictSwarmApiClient
-from .auth import authenticate
 from .config import TOOL_PRICING, USDC_MINT, VS_PAYMENT_WALLET
 from .formatters import format_quick_score, format_report_markdown, format_risk_assessment
-from .payments import get_payment_instructions, verify_solana_payment
+from .payments import verify_solana_payment
 
 mcp = FastMCP("VerdictSwarm")
 api_client = VerdictSwarmApiClient()
@@ -38,14 +37,13 @@ async def scan_token(
     Returns:
         Dictionary containing full analysis results from VerdictSwarm API, or an error payload.
     """
-    auth_err = await authenticate(
-        "scan_token",
-        api_key=api_key or None,
-        tx_signature=tx_signature or None,
+    return await api_client.scan(
+        address=token_address,
+        chain=chain,
+        depth=depth,
+        tier="PRO_PLUS",
+        payment_signature=tx_signature,
     )
-    if auth_err:
-        return auth_err
-    return await api_client.scan(address=token_address, chain=chain, depth=depth, tier="standard")
 
 
 @mcp.tool()
@@ -75,15 +73,12 @@ async def get_quick_score(
     Returns:
         Minimal structured score summary, or an error payload.
     """
-    auth_err = await authenticate(
-        "get_quick_score",
-        api_key=api_key or None,
-        tx_signature=tx_signature or None,
-        client_id=client_id or "anonymous",
+    del api_key, client_id
+    result = await api_client.quick_scan(
+        address=token_address,
+        chain=chain,
+        payment_signature=tx_signature,
     )
-    if auth_err:
-        return auth_err
-    result = await api_client.quick_scan(address=token_address, chain=chain)
     if "error" in result:
         return result
     return format_quick_score(result)
@@ -115,14 +110,12 @@ async def check_rug_risk(
         Structured verdict containing SAFE/CAUTION/DANGER, risk factors, and security checks,
         or an error payload.
     """
-    auth_err = await authenticate(
-        "check_rug_risk",
-        api_key=api_key or None,
-        tx_signature=tx_signature or None,
+    del api_key
+    result = await api_client.rug_risk_scan(
+        address=token_address,
+        chain=chain,
+        payment_signature=tx_signature,
     )
-    if auth_err:
-        return auth_err
-    result = await api_client.quick_scan(address=token_address, chain=chain)
     if "error" in result:
         return result
     return format_risk_assessment(result)
@@ -177,19 +170,12 @@ async def get_token_report(
     Returns:
         Markdown-formatted report text, or a markdown error message.
     """
-    auth_err = await authenticate(
-        "get_token_report",
-        api_key=api_key or None,
-        tx_signature=tx_signature or None,
+    del api_key
+    result = await api_client.quick_scan(
+        address=token_address,
+        chain=chain,
+        payment_signature=tx_signature,
     )
-    if auth_err:
-        return (
-            f"# VerdictSwarm Token Report\n\n"
-            f"**Authentication required.**\n\n"
-            f"Error: {auth_err.get('message', 'Authentication failed.')}\n\n"
-            f"Payment: {auth_err.get('payment_instructions', {})}"
-        )
-    result = await api_client.quick_scan(address=token_address, chain=chain)
     if "error" in result:
         return f"# VerdictSwarm Token Report\n\nError: {result['error']}"
     return format_report_markdown(result)

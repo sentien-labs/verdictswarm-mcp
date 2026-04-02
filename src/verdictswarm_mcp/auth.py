@@ -6,7 +6,7 @@ from collections import defaultdict
 from datetime import date
 from typing import Any
 
-from .config import FREE_TIER_DAILY_LIMIT, TOOL_PRICING, VS_API_KEY
+from .config import FREE_TIER_LIFETIME_LIMIT, TOOL_PRICING, VS_API_KEY
 from .payments import get_payment_instructions, verify_solana_payment
 
 logger = logging.getLogger(__name__)
@@ -33,14 +33,14 @@ def check_free_tier(tool_name: str, client_id: str) -> dict[str, Any] | None:
 
     key = (client_id, _today())
     count = _free_tier_counts[key]
-    if count >= FREE_TIER_DAILY_LIMIT:
+    if count >= FREE_TIER_LIFETIME_LIMIT:
         return {
             "error": "free_tier_limit_exceeded",
             "message": (
-                f"Free tier limit of {FREE_TIER_DAILY_LIMIT} calls/day for '{tool_name}' exceeded. "
+                f"Free tier limit of {FREE_TIER_LIFETIME_LIMIT} calls/day for '{tool_name}' exceeded. "
                 "Provide an API key or pay per call via tx_signature."
             ),
-            "daily_limit": FREE_TIER_DAILY_LIMIT,
+            "daily_limit": FREE_TIER_LIFETIME_LIMIT,
             "payment_instructions": get_payment_instructions(tool_name),
         }
     _free_tier_counts[key] += 1
