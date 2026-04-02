@@ -26,22 +26,8 @@ async def scan_token(
     tx_signature: str = "",
 ) -> dict:
     """
-    Perform comprehensive token risk analysis using VerdictSwarm's 6-AI-agent consensus system.
-
-    This tool executes a full scan of a token contract and returns detailed findings
-    including overall score, risk level, agent-level analysis, and security checks.
-
-    Cost: 0.10 USDC per call (or valid API key).
-
-    Args:
-        token_address: The contract or mint address to analyze.
-        chain: Target blockchain (solana, ethereum, base, bsc).
-        depth: Analysis depth (basic, full, debate).
-        api_key: Optional API key for authenticated access.
-        tx_signature: Optional Solana transaction signature for USDC micropayment.
-
-    Returns:
-        Dictionary containing full analysis results from VerdictSwarm API, or an error payload.
+    Run a full 6-agent VerdictSwarm risk scan.
+    Returns consensus score, risk level, and agent-level findings for safe trading decisions.
     """
     return await api_client.scan(
         address=token_address,
@@ -61,23 +47,9 @@ async def get_quick_score(
     client_id: str = "anonymous",
 ) -> dict:
     """
-    Get a quick risk score for a token using cached or fast-path analysis.
-
-    Use this when you need a fast confidence check before deeper analysis.
-    Returns score (0-100), derived risk level, and basic token metadata.
-
-    Free tier: 10 calls/day (no auth required).
-    Cost: 0.02 USDC per call beyond free tier.
-
-    Args:
-        token_address: The contract or mint address to inspect.
-        chain: Target blockchain (solana, ethereum, base, bsc).
-        api_key: Optional API key for authenticated access.
-        tx_signature: Optional Solana transaction signature for USDC micropayment.
-        client_id: Optional identifier for free-tier rate limiting (e.g. agent wallet address).
-
-    Returns:
-        Minimal structured score summary, or an error payload.
+    Fast cached token risk check.
+    Returns score (0-100), risk band, and key token metadata for quick pre-trade screening.
+    Free: 10 calls/day; paid calls: 0.02 USDC.
     """
     del api_key, client_id
     result = await api_client.quick_scan(
@@ -98,23 +70,8 @@ async def check_rug_risk(
     tx_signature: str = "",
 ) -> dict:
     """
-    Run a focused rug-pull risk assessment with high-signal security indicators.
-
-    Evaluates common red flags such as mint/freeze controls, liquidity lock/burn status,
-    honeypot-like behavior, concentration concerns, and related risk indicators present in
-    the scan response.
-
-    Cost: 0.05 USDC per call (or valid API key).
-
-    Args:
-        token_address: The contract or mint address to assess.
-        chain: Target blockchain (solana, ethereum, base, bsc).
-        api_key: Optional API key for authenticated access.
-        tx_signature: Optional Solana transaction signature for USDC micropayment.
-
-    Returns:
-        Structured verdict containing SAFE/CAUTION/DANGER, risk factors, and security checks,
-        or an error payload.
+    Rug-pull-focused security scan.
+    Checks mint/freeze controls, LP lock status, honeypot behavior, holder concentration, and returns SAFE/CAUTION/DANGER.
     """
     del api_key
     result = await api_client.rug_risk_scan(
@@ -127,21 +84,11 @@ async def check_rug_risk(
     return format_risk_assessment(result)
 
 
-@mcp.tool()
+# NOTE: Keeping function for backwards compatibility; not exposed as MCP tool until implementation is ready.
 async def get_trending_risky(chain: str = "solana", min_risk_level: str = "HIGH", limit: int = 5) -> dict:
     """
-    Get trending risky tokens for the selected chain.
-
-    This endpoint is planned for a future API phase. For now, it returns a clear placeholder
-    payload so clients can integrate against a stable tool signature.
-
-    Args:
-        chain: Blockchain to query (solana, ethereum, base).
-        min_risk_level: Threshold to include (MEDIUM, HIGH, CRITICAL).
-        limit: Number of items requested (1-20).
-
-    Returns:
-        Placeholder response describing current availability status.
+    Deprecated placeholder: trending-risky discovery is not yet available.
+    Returns a stable coming-soon response for compatibility.
     """
     return {
         "status": "coming_soon",
@@ -160,21 +107,8 @@ async def get_token_report(
     tx_signature: str = "",
 ) -> str:
     """
-    Get a human-readable markdown report for a token.
-
-    Generates a formatted report suitable for sharing that includes score, risk level,
-    major risk factors, security checks, and optional recommendation fields when available.
-
-    Cost: 0.02 USDC per call (or valid API key).
-
-    Args:
-        token_address: The contract or mint address to report on.
-        chain: Target blockchain (solana, ethereum, base, bsc).
-        api_key: Optional API key for authenticated access.
-        tx_signature: Optional Solana transaction signature for USDC micropayment.
-
-    Returns:
-        Markdown-formatted report text, or a markdown error message.
+    Generate a shareable markdown report for a token.
+    Includes score, risk level, security findings, and recommendations.
     """
     del api_key
     result = await api_client.quick_scan(
@@ -190,13 +124,8 @@ async def get_token_report(
 @mcp.tool()
 async def get_pricing() -> dict:
     """
-    Get the current pricing table for all VerdictSwarm MCP tools.
-
-    Returns pricing in USDC per call, payment wallet address, USDC mint,
-    and instructions for submitting micropayments from autonomous agents.
-
-    Returns:
-        Dictionary with per-tool pricing, wallet info, and payment instructions.
+    Return current tool pricing and Solana payment details.
+    Includes USDC rates, wallet/mint, free-tier limits, and transaction instructions.
     """
     return {
         "pricing": TOOL_PRICING,
@@ -220,17 +149,8 @@ async def get_pricing() -> dict:
 @mcp.tool()
 async def verify_payment(tx_signature: str, tool_name: str) -> dict:
     """
-    Verify that a Solana USDC payment was received for a specific tool call.
-
-    Agents can use this to confirm their payment before calling an expensive tool,
-    or to debug failed payment verifications.
-
-    Args:
-        tx_signature: The Solana transaction signature of the USDC transfer.
-        tool_name: The tool name the payment is intended for (used to check amount).
-
-    Returns:
-        Verification result with verified status, amount, and sender info.
+    Verify a Solana USDC payment for a tool call.
+    Returns verification status, sender, and required vs received amount.
     """
     required_amount = TOOL_PRICING.get(tool_name, 0.0)
     result = await verify_solana_payment(tx_signature, expected_amount=required_amount)
@@ -246,7 +166,6 @@ def help_resource() -> str:
         "- scan_token: Full consensus scan (0.10 USDC)\n"
         "- get_quick_score: Fast score lookup (free tier: 10/day, then 0.02 USDC)\n"
         "- check_rug_risk: Focused security verdict (0.05 USDC)\n"
-        "- get_trending_risky: Trending risky tokens (coming soon, free)\n"
         "- get_token_report: Shareable markdown report (0.02 USDC)\n"
         "- get_pricing: View pricing table (free)\n"
         "- verify_payment: Verify your USDC payment (free)\n"
