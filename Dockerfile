@@ -7,10 +7,10 @@ COPY pyproject.toml README.md LICENSE ./
 COPY src/ src/
 RUN pip install --no-cache-dir .
 
-# Run as streamable-http for remote hosting (Smithery, Glama, etc.)
+# FastMCP reads HOST/PORT env vars for streamable-http transport
 ENV VS_TRANSPORT=streamable-http
-ENV VS_HOST=0.0.0.0
-ENV VS_PORT=8000
+ENV HOST=0.0.0.0
+ENV PORT=8000
 ENV VS_API_URL=https://api.vswarm.io
 
 EXPOSE 8000
