@@ -2,8 +2,9 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-# Install the package from PyPI
-RUN pip install --no-cache-dir verdictswarm-mcp>=0.1.5
+# Copy source and install from local (includes streamable-http transport)
+COPY . .
+RUN pip install --no-cache-dir .
 
 # Run as streamable-http for remote hosting (Smithery, Glama, etc.)
 ENV VS_TRANSPORT=streamable-http
