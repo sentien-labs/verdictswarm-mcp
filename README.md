@@ -89,8 +89,9 @@ The server works without a key at free-tier limits (10 scans lifetime, basic sco
 | `scan_token` | Full 6-agent consensus analysis | Deep due diligence on a specific token |
 | `get_quick_score` | Fast cached score lookup (0-100) | Quick check before buying |
 | `check_rug_risk` | Focused security/rug assessment | "Is this a scam?" |
-| `get_trending_risky` | Trending high-risk tokens | Market surveillance (coming soon) |
 | `get_token_report` | Formatted markdown report | Sharing analysis with others |
+| `get_pricing` | Tool pricing and payment details | View costs and Solana payment info |
+| `verify_payment` | Verify USDC payment on Solana | Confirm payment before calling paid tools |
 
 ### Example: Quick Score
 
