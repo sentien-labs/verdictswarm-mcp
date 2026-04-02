@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "verdictswarm-mcp"
 version = "0.1.5"
-description = "MCP server for AI-powered crypto token risk analysis — 6-agent consensus scoring, rug-pull detection, and security audits via the VerdictSwarm API."
+description = "Fight AI with AI. The security layer for AI agents that touch money — 6 adversarial AI agents debate crypto token risk before your agent trades. Rug-pull detection, security audits, consensus scoring."
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.10"
