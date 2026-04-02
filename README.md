@@ -4,6 +4,7 @@
 [![Python](https://img.shields.io/badge/python-3.10+-blue)](https://github.com/vswarm-ai/verdictswarm)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![MCP](https://img.shields.io/badge/MCP-1.0-blue)](https://modelcontextprotocol.io)
+[![sentien-labs/verdictswarm-mcp MCP server](https://glama.ai/mcp/servers/sentien-labs/verdictswarm-mcp/badge)](https://glama.ai/mcp/servers/sentien-labs/verdictswarm-mcp)
 
 **Fight AI with AI.** Scammers build rugs with AI. Your agent catches them with 6.
 
