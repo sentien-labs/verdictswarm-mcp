@@ -7,12 +7,10 @@ COPY pyproject.toml README.md LICENSE ./
 COPY src/ src/
 RUN pip install --no-cache-dir .
 
-# FastMCP reads HOST/PORT env vars for streamable-http transport
 ENV VS_TRANSPORT=streamable-http
-ENV HOST=0.0.0.0
-ENV PORT=8000
 ENV VS_API_URL=https://api.vswarm.io
 
 EXPOSE 8000
 
-ENTRYPOINT ["verdictswarm-mcp"]
+# Run uvicorn directly with explicit 0.0.0.0 binding
+CMD ["python", "-c", "from verdictswarm_mcp.server import mcp; import uvicorn; uvicorn.run(mcp.streamable_http_app(), host='0.0.0.0', port=8000)"]
