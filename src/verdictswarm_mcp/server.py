@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import os
+
 from mcp.server.fastmcp import FastMCP
 
 from .api_client import VerdictSwarmApiClient
@@ -7,7 +9,11 @@ from .config import TOOL_PRICING, USDC_MINT, VS_PAYMENT_WALLET
 from .formatters import format_quick_score, format_report_markdown, format_risk_assessment
 from .payments import verify_solana_payment
 
-mcp = FastMCP("VerdictSwarm")
+mcp = FastMCP(
+    "VerdictSwarm",
+    host=os.getenv("HOST", "0.0.0.0"),
+    port=int(os.getenv("PORT", "8000")),
+)
 api_client = VerdictSwarmApiClient()
 
 
