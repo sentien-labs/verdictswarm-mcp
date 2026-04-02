@@ -165,13 +165,47 @@ async def get_token_report(
         openWorldHint=False,
     ),
 )
-async def get_pricing() -> dict:
+async def get_pricing(
+    tool_name: Annotated[
+        str | None,
+        Field(description="Optional tool name to filter pricing for a specific tool only"),
+    ] = None,
+) -> dict:
     """
     Return current tool pricing and Solana payment details.
     Includes USDC rates, wallet/mint, free-tier limits, and transaction instructions.
+    Optionally filter by tool name via the tool_name parameter.
     """
+    selected_pricing = TOOL_PRICING
+    if tool_name:
+        requested_tool = tool_name.strip()
+        if requested_tool:
+            tool_cost = TOOL_PRICING.get(requested_tool)
+            if tool_cost is None:
+                return {
+                    "pricing": {},
+                    "currency": "USDC",
+                    "network": "solana-mainnet",
+                    "usdc_mint": USDC_MINT,
+                    "payment_wallet": VS_PAYMENT_WALLET,
+                    "free_tier": {
+                        "tool": "get_quick_score",
+                        "daily_limit": 10,
+                        "requires_client_id": True,
+                    },
+                    "instructions": (
+                        "Send USDC on Solana to the payment_wallet. "
+                        "Pass the transaction signature as tx_signature when calling the tool. "
+                        "Each signature can only be used once (replay protection)."
+                    ),
+                    "error": f"Unknown tool_name '{requested_tool}'. "
+                    f"Available tools: {', '.join(sorted(TOOL_PRICING.keys()))}",
+                }
+
+            selected_pricing = {requested_tool: tool_cost}
+
     return {
-        "pricing": TOOL_PRICING,
+        "pricing": selected_pricing,
         "currency": "USDC",
         "network": "solana-mainnet",
         "usdc_mint": USDC_MINT,

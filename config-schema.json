@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "title": "VerdictSwarm Configuration",
+  "description": "Optional configuration for VerdictSwarm MCP server",
+  "properties": {
+    "apiKey": {
+      "type": "string",
+      "default": "",
+      "description": "Optional API key for authenticated access. Alternative to per-call USDC payments."
+    }
+  },
+  "required": [],
+  "additionalProperties": false
+}
