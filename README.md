@@ -5,7 +5,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![MCP](https://img.shields.io/badge/MCP-1.0-blue)](https://modelcontextprotocol.io)
 
-**The first crypto token scanner available via MCP.** Give any AI agent the ability to analyze tokens for rug pulls, scams, and risk — powered by VerdictSwarm's 6-AI-agent consensus system.
+**Fight AI with AI.** Scammers build rugs with AI. Your agent catches them with 6.
+
+The security layer for AI agents that touch money. One tool call between your trading agent and a rug pull.
 
 Works with Claude Desktop, OpenClaw, Cursor, Codex, Windsurf, and any MCP-compatible client.
 
@@ -13,14 +15,14 @@ Works with Claude Desktop, OpenClaw, Cursor, Codex, Windsurf, and any MCP-compat
 
 ## Why?
 
-AI trading agents are making on-chain decisions with no risk analysis. VerdictSwarm MCP gives them instant access to:
+AI trading agents are making autonomous on-chain decisions with zero risk analysis. Scammers are using AI to build increasingly sophisticated rugs that bypass single-algorithm scanners. The agent attack surface is the new phishing — but worse, because agents have system access and make financial decisions autonomously.
 
-- **6-agent consensus scoring** — not one model's opinion, six independent AI agents debate the risk
+VerdictSwarm deploys 6 adversarial AI agents that independently analyze, debate, and reach consensus on any token:
+
+- **Adversarial debate** — not one model's opinion. Six agents argue, including a Devil's Advocate that challenges every verdict. You see the dissenting opinions.
 - **On-chain security audits** — mint authority, freeze authority, honeypot detection, LP lock status
 - **Rug pull detection** — holder concentration, bundle/sniper activity, contract age analysis
-- **Human-readable reports** — markdown reports ready to share or embed
-
-One tool call. Sub-second cached responses. No blockchain node required.
+- **Agent-native** — built for MCP. One tool call. Sub-second cached responses. No blockchain node required.
 
 ## Quick Start
 
