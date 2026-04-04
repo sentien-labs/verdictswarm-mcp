@@ -1,0 +1,9 @@
+# Copy this file into your OpenClaw MCP config
+mcpServers:
+  verdictswarm:
+    # Run with uvx so you do not need local install
+    command: uvx
+    args: ["verdictswarm-mcp"]
+    # Your VerdictSwarm API key is required
+    env:
+      VS_API_KEY: your_key_here

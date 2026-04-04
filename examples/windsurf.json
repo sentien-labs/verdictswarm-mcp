@@ -1,0 +1,12 @@
+{
+  "_comment": "Copy this entire file into ~/.codeium/windsurf/mcp_config.json",
+  "mcpServers": {
+    "verdictswarm": {
+      "command": "uvx",
+      "args": ["verdictswarm-mcp"],
+      "env": {
+        "VS_API_KEY": "your_key_here"
+      }
+    }
+  }
+}
