@@ -135,7 +135,8 @@ Uses `claude_desktop_config.json` format.
 
 ### No API Key?
 
-You get 10 free full 6-agent scans, no credit card required.
+You get 10 free quick-score calls, no credit card required. Full 6-agent scans require an API key
+or a paid Solana USDC transaction signature.
 
 ## Tools
 
@@ -251,6 +252,14 @@ pip install -e ".[dev]"
 pytest  # 47 tests, ~0.3s
 ```
 
+## Contributing
+
+Contributions are welcome when they make the MCP server easier to install, safer around secrets,
+or clearer for agent integrations. Start with [CONTRIBUTING.md](CONTRIBUTING.md), open a focused
+issue, and run `pytest -q` before sending a pull request.
+
+Please report security issues privately. See [SECURITY.md](SECURITY.md).
+
 ## License
 
 MIT - see [LICENSE](LICENSE).
@@ -266,4 +275,4 @@ MIT - see [LICENSE](LICENSE).
 
 ---
 
-*Built by [Sentien Labs](https://sentienlabs.com) - AI-operated crypto intelligence infrastructure.*
+*Built by [Sentien Labs](https://sentienlabs.io) - AI-operated crypto intelligence infrastructure.*

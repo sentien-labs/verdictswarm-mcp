@@ -33,7 +33,7 @@ VALID_TX_RESPONSE = {
                     "accountIndex": 2,
                     "mint": USDC_MINT,
                     "owner": WALLET,
-                    "uiTokenAmount": {"uiAmount": 0.10, "decimals": 6},
+                    "uiTokenAmount": {"uiAmount": 1.00, "decimals": 6},
                 }
             ],
         },
@@ -52,7 +52,7 @@ VALID_TX_RESPONSE = {
                                 "mint": USDC_MINT,
                                 "destination": "DestTokenAccount111111111111111111111111111",
                                 "authority": SENDER,
-                                "tokenAmount": {"uiAmount": 0.10, "decimals": 6},
+                                "tokenAmount": {"uiAmount": 1.00, "decimals": 6},
                             },
                         }
                     }
@@ -81,7 +81,7 @@ def reset_state():
 def test_get_payment_instructions_scan_token():
     with patch("verdictswarm_mcp.payments.VS_PAYMENT_WALLET", WALLET):
         info = get_payment_instructions("scan_token")
-    assert info["amount_usdc"] == 0.10
+    assert info["amount_usdc"] == 1.00
     assert info["usdc_mint"] == USDC_MINT
     assert info["wallet"] == WALLET
     assert info["tool"] == "scan_token"
@@ -91,13 +91,13 @@ def test_get_payment_instructions_scan_token():
 def test_get_payment_instructions_get_quick_score():
     with patch("verdictswarm_mcp.payments.VS_PAYMENT_WALLET", WALLET):
         info = get_payment_instructions("get_quick_score")
-    assert info["amount_usdc"] == 0.02
+    assert info["amount_usdc"] == 0.10
 
 
-def test_get_payment_instructions_compare_tokens():
+def test_get_payment_instructions_check_rug_risk():
     with patch("verdictswarm_mcp.payments.VS_PAYMENT_WALLET", WALLET):
-        info = get_payment_instructions("compare_tokens")
-    assert info["amount_usdc"] == 0.15
+        info = get_payment_instructions("check_rug_risk")
+    assert info["amount_usdc"] == 0.50
 
 
 def test_get_payment_instructions_unknown_tool():
@@ -119,7 +119,7 @@ async def test_verify_payment_success():
     ):
         result = await verify_solana_payment(TX_SIG, expected_amount=0.10)
     assert result["verified"] is True
-    assert result["amount_usdc"] == 0.10
+    assert result["amount_usdc"] == 1.00
     assert result["sender"] == SENDER
 
 
@@ -129,10 +129,10 @@ async def test_verify_payment_insufficient_amount():
         patch("verdictswarm_mcp.payments.VS_PAYMENT_WALLET", WALLET),
         patch("verdictswarm_mcp.payments._fetch_transaction", AsyncMock(return_value=VALID_TX_RESPONSE["result"])),
     ):
-        result = await verify_solana_payment(TX_SIG, expected_amount=0.50)
+        result = await verify_solana_payment(TX_SIG, expected_amount=1.50)
     assert result["verified"] is False
     assert "Insufficient payment" in result["error"]
-    assert result["amount_usdc"] == 0.10
+    assert result["amount_usdc"] == 1.00
 
 
 @pytest.mark.asyncio
@@ -333,11 +333,11 @@ async def test_free_tier_only_for_get_quick_score():
 
 
 def test_tool_pricing_values():
-    assert TOOL_PRICING["scan_token"] == 0.10
-    assert TOOL_PRICING["get_quick_score"] == 0.02
-    assert TOOL_PRICING["check_rug_risk"] == 0.05
-    assert TOOL_PRICING["analyze_contract"] == 0.10
-    assert TOOL_PRICING["compare_tokens"] == 0.15
+    assert TOOL_PRICING["scan_token"] == 1.00
+    assert TOOL_PRICING["get_quick_score"] == 0.10
+    assert TOOL_PRICING["check_rug_risk"] == 0.50
+    assert TOOL_PRICING["get_token_report"] == 0.10
     # Free tools
+    assert TOOL_PRICING["get_trending_risky"] == 0.0
     assert TOOL_PRICING["get_pricing"] == 0.0
     assert TOOL_PRICING["verify_payment"] == 0.0

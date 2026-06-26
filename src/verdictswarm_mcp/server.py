@@ -68,7 +68,7 @@ async def get_quick_score(
     """
     Fast cached token risk check.
     Returns score (0-100), risk band, and key token metadata for quick pre-trade screening.
-    Free: 10 calls/day; paid calls: 0.02 USDC.
+    Free tier: 10 lifetime quick-score calls per client. Paid calls: 0.10 USDC.
     """
     del api_key, client_id
     result = await api_client.quick_scan(
@@ -190,7 +190,7 @@ async def get_pricing(
                     "payment_wallet": VS_PAYMENT_WALLET,
                     "free_tier": {
                         "tool": "get_quick_score",
-                        "daily_limit": 10,
+                        "lifetime_limit": 10,
                         "requires_client_id": True,
                     },
                     "instructions": (
@@ -212,7 +212,7 @@ async def get_pricing(
         "payment_wallet": VS_PAYMENT_WALLET,
         "free_tier": {
             "tool": "get_quick_score",
-            "daily_limit": 10,
+            "lifetime_limit": 10,
             "requires_client_id": True,
         },
         "instructions": (
@@ -251,10 +251,10 @@ async def verify_payment(
 def help_resource() -> str:
     return (
         "VerdictSwarm MCP provides AI-driven token risk analysis tools:\n"
-        "- scan_token: Full consensus scan (0.10 USDC)\n"
-        "- get_quick_score: Fast score lookup (free tier: 10/day, then 0.02 USDC)\n"
-        "- check_rug_risk: Focused security verdict (0.05 USDC)\n"
-        "- get_token_report: Shareable markdown report (0.02 USDC)\n"
+        "- scan_token: Full consensus scan (1.00 USDC)\n"
+        "- get_quick_score: Fast score lookup (free tier: 10 lifetime calls, then 0.10 USDC)\n"
+        "- check_rug_risk: Focused security verdict (0.50 USDC)\n"
+        "- get_token_report: Shareable markdown report (0.10 USDC)\n"
         "- get_pricing: View pricing table (free)\n"
         "- verify_payment: Verify your USDC payment (free)\n"
         "\n"

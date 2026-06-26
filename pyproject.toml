@@ -44,10 +44,10 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://vswarm.io"
-Documentation = "https://github.com/vswarm-ai/verdictswarm/tree/main/mcp-server"
-Repository = "https://github.com/vswarm-ai/verdictswarm"
-Issues = "https://github.com/vswarm-ai/verdictswarm/issues"
-Changelog = "https://github.com/vswarm-ai/verdictswarm/blob/main/mcp-server/CHANGELOG.md"
+Documentation = "https://github.com/sentien-labs/verdictswarm-mcp#readme"
+Repository = "https://github.com/sentien-labs/verdictswarm-mcp"
+Issues = "https://github.com/sentien-labs/verdictswarm-mcp/issues"
+Changelog = "https://github.com/sentien-labs/verdictswarm-mcp/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 dev = [

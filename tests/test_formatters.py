@@ -71,10 +71,10 @@ def test_format_quick_score_derives_defaults_when_missing():
     assert quick["chain"] == "unknown"
 
 
-def test_format_quick_score_uses_free_tier_confidence(mock_free_result):
+def test_format_quick_score_does_not_treat_free_tier_confidence_as_score(mock_free_result):
     quick = format_quick_score(mock_free_result)
-    assert quick["score"] == 67.0
-    assert quick["grade"] == "C"
+    assert quick["score"] is None
+    assert quick["grade"] == "N/A"
     assert quick["risk_level"] == "MEDIUM"
 
 
